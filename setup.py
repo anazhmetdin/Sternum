@@ -4,7 +4,7 @@ setup(
     name='sternum',
     version='0.0.1',
     package_dir={"": "src"},
-    install_requires= "gensim",
+    install_requires= [],
     setup_requires= [],
     entry_points={
         'console_scripts': [
