@@ -7,9 +7,11 @@ class decoder(object):
         try:
             if fileName.endswith(".fasta"):
                 file = open(fileName)
+            else:
+                file = open("")
         except FileNotFoundError:
             print('There is no such file, make sure to write it in this\
-             format "XXXXX.fasta"  Try again')
+format "XXXXX.fasta"  Try again')
 
         for line in file:
             line = line.rstrip()
@@ -21,9 +23,11 @@ class decoder(object):
         try:
             if fileName.endswith(".fastq"):
                 file = open(fileName)
+            else:
+                file = open("")
         except FileNotFoundError:
             print('There is no such file, make sure to write it in this\
-             format "XXXXX.fastq"  Try again')
+format "XXXXX.fastq"  Try again')
 
         self.seq = dict()
         for line in file:
