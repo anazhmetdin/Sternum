@@ -47,7 +47,7 @@ class kmer_maker(object):
                     sequence = filename[seqPos+1:-6]
                     self.kmers[sequence] = []
                     for line in file:
-                        self.kmers[sequence].append(line.rstrip('\n'))
+                        self.kmers[sequence].append(line.rstrip('\n').split('\t'))
 
         file = open("patch.kmers",'w')
         file.write(str(currentPatch+patchSize))

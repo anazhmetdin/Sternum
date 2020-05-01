@@ -11,11 +11,11 @@ class testTrie(unittest.TestCase):
         Test if elements are added in correct hirachy
         """
         global names
-        names.add_suffix("Ahmed")
-        names.add_suffix("Abdullah")
-        names.add_suffix("Omar")
-        names.add_suffix("Sarah")
-        names.add_suffix("Oman")
+        names.add_suffix("Ahmed",5,1)
+        names.add_suffix("Abdullah",8,2)
+        names.add_suffix("Omar",4,3)
+        names.add_suffix("Sarah",5,4)
+        names.add_suffix("Oman",4,5)
         result = len(names.trie[0])
         result1 = len(names.trie[0]['A'])
         result2 = len(names.trie[0]['O']['m'])
@@ -35,9 +35,9 @@ class testTrie(unittest.TestCase):
         result1 = names.find_suffix('Abdullah')
         result2 = names.find_suffix('Omar')
 
-        self.assertEqual(result, 5)
-        self.assertEqual(result1, 8)
-        self.assertEqual(result2, 4)
+        self.assertEqual(result, [[5,1]])
+        self.assertEqual(result1, [[8,2]])
+        self.assertEqual(result2, [[4,3]])
 
 if __name__ == '__main__':
     unittest.main()
