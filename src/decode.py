@@ -4,13 +4,10 @@ class decoder(object):
         self.seq = dict()
 
     def fasta(self, fileName):
-        try:
-            if fileName.endswith(".fasta"):
+        if fileName.endswith(".fasta"):
                 file = open(fileName)
-            else:
-                file = open("")
-        except FileNotFoundError:
-            print('There is no such file, make sure to write it in this\
+        else:
+            raise FileNotFoundError('There is no such file, make sure to write it in this\
 format "XXXXX.fasta"  Try again')
 
         for line in file:
@@ -24,14 +21,11 @@ format "XXXXX.fasta"  Try again')
         file.close()
 
     def fastq(self, fileName):
-        try:
-            if fileName.endswith(".fastq"):
-                file = open(fileName)
-            else:
-                file = open("")
-        except FileNotFoundError:
-            print('There is no such file, make sure to write it in this\
-format "XXXXX.fastq"  Try again')
+        if fileName.endswith(".fastq"):
+            file = open(fileName)
+        else:
+            raise FileNotFoundError('There is no such file, make sure to write it in this\
+format "XXXXX.fasta"  Try again')
 
         for line in file:
             if line.startswith('@'):
@@ -41,6 +35,5 @@ format "XXXXX.fastq"  Try again')
                 else:
                     continue
                 line = file.readline()
-                self.seq[ID] = []
-                self.seq[ID].append(line.rstrip())
+                self.seq[ID] = line.rstrip()
         file.close()
