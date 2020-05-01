@@ -17,14 +17,14 @@ class kmer_maker(object):
             self.seqCount += 1
             if sequence not in self.kmers: self.kmers[sequence] = []
             for i in range(0,len(seq[sequence])-self.k+1,step):
-                self.kmers[sequence].append(seq[sequence][i:i+self.k])
+                self.kmers[sequence].append( [seq[sequence][i:i+self.k], i] )
 
     def dumb(self, filePrefix = ""):
         i=0
         for sequence in self.kmers:
             file = open(filePrefix+"_"+str(i)+"_"+sequence+".kmers", "a")
             for kmer in self.kmers[sequence]:
-                file.write(kmer+'\n')
+                file.write(kmer[0]+'\t'+str(kmer[1])+'\n')
             i+=1
             file.close()
 
