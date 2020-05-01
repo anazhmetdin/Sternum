@@ -1,7 +1,7 @@
 class decoder(object):
 
     def __init__(self):
-        self.seq = ""
+        self.seq = dict()
 
     def fasta(self, fileName):
         try:
@@ -14,9 +14,13 @@ class decoder(object):
 format "XXXXX.fasta"  Try again')
 
         for line in file:
-            line = line.rstrip()
-            if not line.startswith('>'):
-                self.seq += line
+            if line.startswith('>'):
+                line = line.lstrip('>')
+                ID = line.split(' ')[0]
+                self.seq[ID] = ""
+            else:
+                line = line.rstrip()
+                self.seq[ID] += line
         file.close()
 
     def fastq(self, fileName):
@@ -29,7 +33,6 @@ format "XXXXX.fasta"  Try again')
             print('There is no such file, make sure to write it in this\
 format "XXXXX.fastq"  Try again')
 
-        self.seq = dict()
         for line in file:
             if line.startswith('@'):
                 ID = line.lstrip('@').split(' ')
