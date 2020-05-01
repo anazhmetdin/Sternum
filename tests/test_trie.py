@@ -4,7 +4,7 @@ from trie import *
 class testTrie(unittest.TestCase):
 
     global names
-    names = names = Trie()
+    names = Trie()
 
     def test_trie_insertion(self):
         """
