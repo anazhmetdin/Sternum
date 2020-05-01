@@ -1,5 +1,6 @@
 import argparse
 from decode import *
+from trie import *
 
 parser = argparse.ArgumentParser("dsfs")
 parser.add_argument("-a", default=1, help="This is the 'a' variable")
