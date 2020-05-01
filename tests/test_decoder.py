@@ -7,8 +7,7 @@ class testDecoder(unittest.TestCase):
         Test if properly decoded
         """
         fileName = "data/KR233687.fasta"
-        fastaFile = decoder()
-        fastaFile.fasta(fileName)
+        fastaFile = decoder(fileName)
         result = fastaFile.seq
 
         expected = "GAGATCTAATGTCTCAATCCCGCACTCGCGAGATACTAACAAAAACCACTGTGGACCATATGGCCATAAT\
@@ -30,8 +29,7 @@ CGGATGGTCATCAATT"
         Test if properly decoded
         """
         fileName = "data/ERR1293055_first100.fastq"
-        fastaFile = decoder()
-        fastaFile.fastq(fileName)
+        fastaFile = decoder(fileName)
         result = fastaFile.seq
 
         expected = "CTCTTCTACTTCTACACCTAATACATCCCCTCCCTCCCTCTCCCCCCTCCCCCTTCCT"

@@ -1,14 +1,20 @@
+import os
+
 class decoder(object):
 
-    def __init__(self):
+    def __init__(self, fileName):
         self.seq = dict()
+        if fileName.endswith(".fasta"):
+            self.fasta(fileName)
+        else:
+            self.fastq(fileName)
 
     def fasta(self, fileName):
-        if fileName.endswith(".fasta"):
+        if fileName.endswith(".fasta") and os.path.exists(fileName):
                 file = open(fileName)
         else:
-            raise FileNotFoundError('There is no such file, make sure to write it in this\
-format "XXXXX.fasta"  Try again')
+            raise FileNotFoundError('make sure the file exists and write it in\
+this format "XXXXX.fasta" or "XXXXX.fastq" Try again')
 
         for line in file:
             if line.startswith('>'):
@@ -21,11 +27,11 @@ format "XXXXX.fasta"  Try again')
         file.close()
 
     def fastq(self, fileName):
-        if fileName.endswith(".fastq"):
+        if fileName.endswith(".fastq") and os.path.exists(fileName):
             file = open(fileName)
         else:
-            raise FileNotFoundError('There is no such file, make sure to write it in this\
-format "XXXXX.fasta"  Try again')
+            raise FileNotFoundError('make sure the file exists and write it in\
+this format "XXXXX.fasta" or "XXXXX.fastq" Try again')
 
         for line in file:
             if line.startswith('@'):

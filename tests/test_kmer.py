@@ -9,8 +9,7 @@ class testKmer(unittest.TestCase):
         Test splicing fasta overlapping kmers
         """
         fileName = "data/KR233687.fasta"
-        fastaFile = decoder()
-        fastaFile.fasta(fileName)
+        fastaFile = decoder(fileName)
         kmer = kmer_maker(13, True, fastaFile.seq)
         self.assertIn("GAGATCTAATGTC", kmer.kmers["KR233687.2.1"])
         self.assertIn("TAATGGTGGCATA", kmer.kmers["KR233687.2.1"])
@@ -23,8 +22,7 @@ class testKmer(unittest.TestCase):
         Test splicing fasta nonoverlapping kmers
         """
         fileName = "data/KR233687.fasta"
-        fastaFile = decoder()
-        fastaFile.fasta(fileName)
+        fastaFile = decoder(fileName)
         kmer = kmer_maker(13, False, fastaFile.seq)
         self.assertIn("GAGATCTAATGTC", kmer.kmers["KR233687.2.1"])
         self.assertIn("TCAATCCCGCACT", kmer.kmers["KR233687.2.1"])
@@ -37,8 +35,7 @@ class testKmer(unittest.TestCase):
         Test splicing fastq overlapping kmers
         """
         fileName = "data/ERR1293055_first100.fastq"
-        fastaFile = decoder()
-        fastaFile.fastq(fileName)
+        fastaFile = decoder(fileName)
         kmer = kmer_maker(13, True, fastaFile.seq)
         self.assertIn("TCCTCTTTCTTTC", kmer.kmers["ERR1293055.5"])
         self.assertIn("GTTGGGATCAATA", kmer.kmers["ERR1293055.40"])
@@ -51,8 +48,7 @@ class testKmer(unittest.TestCase):
         Test splicing fastq nonoverlapping kmers
         """
         fileName = "data/ERR1293055_first100.fastq"
-        fastaFile = decoder()
-        fastaFile.fastq(fileName)
+        fastaFile = decoder(fileName)
         kmer = kmer_maker(13, False, fastaFile.seq)
         self.assertIn("CTCTTCTACTTCT", kmer.kmers["ERR1293055.1"])
         self.assertIn("GTTGGGATCAATA", kmer.kmers["ERR1293055.40"])
@@ -65,8 +61,7 @@ class testKmer(unittest.TestCase):
         Test storing kmers to disk
         """
         fileName = "data/ERR1293055_first100.fastq"
-        fastaFile = decoder()
-        fastaFile.fastq(fileName)
+        fastaFile = decoder(fileName)
         kmer = kmer_maker(13, False, fastaFile.seq)
         kmer.dumb()
         file = open("_39_ERR1293055.40.kmers")
@@ -79,8 +74,7 @@ class testKmer(unittest.TestCase):
         Test storing kmers to disk
         """
         fileName = "data/ERR1293055_first100.fastq"
-        fastaFile = decoder()
-        fastaFile.fastq(fileName)
+        fastaFile = decoder(fileName)
         kmer = kmer_maker(13, False, fastaFile.seq)
         kmer.dumb()
         result = kmer.load("", 3)
@@ -91,8 +85,7 @@ class testKmer(unittest.TestCase):
         Test deleting kmers' files from disk
         """
         fileName = "data/ERR1293055_first100.fastq"
-        fastaFile = decoder()
-        fastaFile.fastq(fileName)
+        fastaFile = decoder(fileName)
         kmer = kmer_maker(13, False, fastaFile.seq)
         kmer.dumb()
         kmer.clear()
