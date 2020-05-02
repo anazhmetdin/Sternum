@@ -1,5 +1,3 @@
-from trie import *
-
 class mapper():
     def __init__(self, reference, sequence, trie):
         self.add_reference(reference, trie)
