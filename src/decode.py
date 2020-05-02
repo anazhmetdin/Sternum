@@ -1,5 +1,6 @@
 import os
 
+
 class decoder(object):
 
     def __init__(self, fileName):
@@ -11,7 +12,7 @@ class decoder(object):
 
     def fasta(self, fileName):
         if fileName.endswith(".fasta") and os.path.exists(fileName):
-                file = open(fileName)
+            file = open(fileName)
         else:
             raise FileNotFoundError('make sure the file exists and write it in\
 this format "XXXXX.fasta" or "XXXXX.fastq" Try again')

@@ -1,6 +1,6 @@
 class Trie():
     def __init__(self):
-        self.trie = {0:dict()}
+        self.trie = {0: dict()}
 
     def add_suffix(self, suffix, sequenceName, pos):
         current_dict = self.trie[0]
@@ -12,7 +12,7 @@ class Trie():
                 current_dict = current_dict[letter]
         if '$' not in current_dict:
             current_dict['$'] = []
-        current_dict['$'].append([sequenceName,pos])
+        current_dict['$'].append([sequenceName, pos])
 
     def find_suffix(self, suffix):
         current_dict = self.trie[0]
