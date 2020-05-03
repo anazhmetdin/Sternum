@@ -5,6 +5,7 @@ class decoder(object):
 
     def __init__(self, fileName):
         self.seq = dict()
+        self.filePrefix = fileName[:fileName.rfind("\\")+1]
         if fileName.endswith(".fasta"):
             self.fasta(fileName)
         else:
@@ -15,7 +16,7 @@ class decoder(object):
             file = open(fileName)
         else:
             raise FileNotFoundError('make sure the file exists and write it in\
-this format "XXXXX.fasta" or "XXXXX.fastq" Try again')
+ this format "XXXXX.fasta" or "XXXXX.fastq" Try again')
 
         for line in file:
             if line.startswith('>'):
@@ -32,7 +33,7 @@ this format "XXXXX.fasta" or "XXXXX.fastq" Try again')
             file = open(fileName)
         else:
             raise FileNotFoundError('make sure the file exists and write it in\
-this format "XXXXX.fasta" or "XXXXX.fastq" Try again')
+ this format "XXXXX.fasta" or "XXXXX.fastq" Try again')
 
         for line in file:
             if line.startswith('@'):

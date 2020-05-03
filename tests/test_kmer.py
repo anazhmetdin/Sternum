@@ -11,7 +11,7 @@ class testKmer(unittest.TestCase):
         """
         fileName = "data/KR233687.fasta"
         fastaFile = decoder(fileName)
-        kmer = kmer_maker(13, fastaFile.seq, True)
+        kmer = kmer_maker(13, fastaFile, True)
         self.assertIn(["GAGATCTAATGTC", 0], kmer.kmers["KR233687.2.1"])
         self.assertIn(["TAATGGTGGCATA", 579], kmer.kmers["KR233687.2.1"])
         self.assertIn(["ATTCAGTTGATAG", 1], kmer.kmers["KR233687.2.2"])
@@ -24,7 +24,7 @@ class testKmer(unittest.TestCase):
         """
         fileName = "data/KR233687.fasta"
         fastaFile = decoder(fileName)
-        kmer = kmer_maker(13, fastaFile.seq, False)
+        kmer = kmer_maker(13, fastaFile, False)
         self.assertIn(["GAGATCTAATGTC", 0], kmer.kmers["KR233687.2.1"])
         self.assertIn(["TCAATCCCGCACT", 13], kmer.kmers["KR233687.2.1"])
         self.assertIn(["TTCGGATGGTCAT", 1118], kmer.kmers["KR233687.2.2"])
@@ -37,7 +37,7 @@ class testKmer(unittest.TestCase):
         """
         fileName = "data/ERR1293055_first100.fastq"
         fastaFile = decoder(fileName)
-        kmer = kmer_maker(13, fastaFile.seq, True)
+        kmer = kmer_maker(13, fastaFile, True)
         self.assertIn(["TCCTCTTTCTTTC", 33], kmer.kmers["ERR1293055.5"])
         self.assertIn(["GTTGGGATCAATA", 0], kmer.kmers["ERR1293055.40"])
         self.assertIn(["CTCTTCTACTTCT", 0], kmer.kmers["ERR1293055.1"])
@@ -50,7 +50,7 @@ class testKmer(unittest.TestCase):
         """
         fileName = "data/ERR1293055_first100.fastq"
         fastaFile = decoder(fileName)
-        kmer = kmer_maker(13, fastaFile.seq, False)
+        kmer = kmer_maker(13, fastaFile, False)
         self.assertIn(["CTCTTCTACTTCT", 0], kmer.kmers["ERR1293055.1"])
         self.assertIn(["GTTGGGATCAATA", 0], kmer.kmers["ERR1293055.40"])
         self.assertIn(["ATTCAAATGTTCC", 286], kmer.kmers["ERR1293055.100"])
@@ -63,8 +63,8 @@ class testKmer(unittest.TestCase):
         """
         fileName = "data/ERR1293055_first100.fastq"
         fastaFile = decoder(fileName)
-        kmer = kmer_maker(13, fastaFile.seq, False)
-        kmer.dumb()
+        kmer = kmer_maker(13, fastaFile, False)
+        kmer.dump()
         file = open("_39_ERR1293055.40.kmers")
         lines = file.read()
         self.assertIn("GTTGGGATCAATA", lines)
@@ -76,10 +76,12 @@ class testKmer(unittest.TestCase):
         """
         fileName = "data/ERR1293055_first100.fastq"
         fastaFile = decoder(fileName)
-        kmer = kmer_maker(13, fastaFile.seq, False)
-        kmer.dumb()
-        result = kmer.load("", 3)
-        self.assertIn("CTCCCTCTCCCCT", result["ERR1293055.3"][1])
+        kmer = kmer_maker(13, fastaFile, False)
+        kmer.dump()
+        kmer.load("", 3)
+        self.assertIn("ERR1293055.3", kmer.kmers)
+        kmer.load("", -1)
+        self.assertIn("ERR1293055.100", kmer.kmers)
 
     def test_zclear(self):
         """
@@ -87,8 +89,8 @@ class testKmer(unittest.TestCase):
         """
         fileName = "data/ERR1293055_first100.fastq"
         fastaFile = decoder(fileName)
-        kmer = kmer_maker(13, fastaFile.seq, False)
-        kmer.dumb()
+        kmer = kmer_maker(13, fastaFile, False)
+        kmer.dump()
         kmer.clear()
         self.assertEqual(dict(), kmer.kmers)
 
