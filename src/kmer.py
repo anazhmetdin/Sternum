@@ -4,68 +4,102 @@ import glob
 
 class kmer_maker(object):
     def __init__(self, k, seq, overlapping=True):
+        """
+ Takes k = int() k-mer size, seq = decoder() object, overlapping = boolean()\
+ to process the sequence and store it in "kmers", which is a dictionary\
+ following template:
+ {readID.1: ["kmer", "kmer", ..., "kmer"]
+  readID.2: ["kmer", "kmer", ..., "kmer"]
+  .
+  .
+  .
+  readIDn: ["kmer", "kmer", ..., "kmer"]}
+        """
         self.kmers = dict()
         self.seqCount = 0
         self.k = k
         self.seq = seq
+        self.filePrefix = seq.filePrefix
+        self.currentPatch = 0
+        self.fileExten = ".kmers"
         self.splice(self.seq.seq, overlapping)
 
     def splice(self, seq, overlapping):
+        """
+ Takes seq = decoder() object, overlapping = boolean()\
+ to process the sequence and store it in "kmers", which is a dictionary\
+ following template:
+ {readID.1: ["kmer", "kmer", ..., "kmer"]
+  readID.2: ["kmer", "kmer", ..., "kmer"]
+  .
+  .
+  .
+  readIDn: ["kmer", "kmer", ..., "kmer"]}
+        """
         if overlapping:
             step = 1
         else:
             step = self.k
-        for sequence in seq:
+        for readID in seq:
             self.seqCount += 1
-            if sequence not in self.kmers:
-                self.kmers[sequence] = []
-            for i in range(0, len(seq[sequence])-self.k+1, step):
-                self.kmers[sequence].append([seq[sequence][i:i+self.k], i])
+            if readID not in self.kmers:
+                self.kmers[readID] = []
+            for i in range(0, len(seq[readID])-self.k+1, step):
+                self.kmers[readID].append([seq[readID][i:i+self.k], i])
 
     def dump(self, filePrefix=""):
+        """
+ Takes filePrefix = str() file-prefix path to store the processed kmers on\
+ hard disk and free the memory. The kmers are stored in files named as:\
+ filePrefix_i_readID.fileExtension
+        """
         i = 0
-        for sequence in self.kmers:
-            file = open(filePrefix+"_"+str(i)+"_"+sequence+".kmers", "a")
-            for kmer in self.kmers[sequence]:
-                file.write(kmer[0]+'\t'+str(kmer[1])+'\n')
-            i += 1
-            file.close()
+        fileExten = self.fileExten
+        if len(self.kmers) == self.seqCount:
+            for readID in self.kmers:
+                file = open(filePrefix+"_"+str(i)+"_"+readID+fileExten, "w")
+                for kmer in self.kmers[readID]:
+                    file.write(kmer[0]+'\t'+str(kmer[1])+'\n')
+                i += 1
+                file.close()
+        self.kmers.clear()
 
     def load(self, filePrefix="", patchSize=-1):
-        currentPatch = 0
-        flag = False
-        if os.path.exists(filePrefix+"patch.kmers"):
-            file = open(filePrefix+"patch.kmers")
-            currentPatch = int(file.read().rstrip())
-            file.close()
-        else:
-            file = open(filePrefix+"patch.kmers", 'a')
-            file.write(str(currentPatch))
-            file.close()
-        if patchSize == -1:
-            patchSize = self.seqCount-currentPatch
-        self.kmers = dict()
-        if currentPatch+patchSize > self.seqCount:
-            patchSize = self.seqCount-currentPatch
+        """
+ Takes filePrefix = str() file-prefix path to where kmers are stored\
+ on hard disk and load them to the memory, if patchSize == -1 all files are\
+ loaded, else it loads #patchSize reads' kmers
+        """
+        fileExten = self.fileExten
+        flag = False  # detect if this is the last patch
+        if patchSize <= 0:
+            patchSize = self.seqCount-self.currentPatch
+        if self.currentPatch+patchSize > self.seqCount:
+            patchSize = self.seqCount-self.currentPatch
             flag = True
-        for i in range(currentPatch, currentPatch+patchSize):
-            for filename in glob.glob(filePrefix+"_"+str(i)+"_*.kmers"):
-                with open(filename, 'r') as file:
-                    seqPos = filename.rfind("_")
-                    sequence = filename[seqPos+1:-6]
-                    self.kmers[sequence] = []
-                    for line in file:
-                        line = line.rstrip('\n').split('\t')
-                        self.kmers[sequence].append([line[0], int(line[1])])
-
-        file = open(filePrefix+"patch.kmers", 'w')
-        file.write(str(currentPatch+patchSize))
-        file.close()
+        for i in range(self.currentPatch, self.currentPatch+patchSize):
+            for filename in glob.glob(filePrefix+"_"+str(i)+"_*"+fileExten):
+                file = open(filename, 'r')
+                seqPos = filename.rfind("_")
+                readID = filename[seqPos+1:-len(fileExten)]
+                self.kmers[readID] = []
+                lines = file.readlines()
+                for line in lines:
+                    line = line.rstrip('\n').split('\t')
+                    self.kmers[readID].append([line[0], int(line[1])])
+                file.close()
+        self.currentPatch += patchSize
         if flag:
             self.clear(True, filePrefix)
-            return flag
+            return flag  # would be usefule to be used in external conditions
 
     def clear(self, admin=True, filePrefix=""):
+        """
+ Takes filePrefix = str() file-prefix path to where kmers are stored\
+ on hard disk and remove all files and clear "kmers", if admin == Fasle\
+ will prompt to user before deleting data
+        """
+        fileExten = self.fileExten
         if not admin:
             print("WARNING: This will delete ALL kmers files and ALL stored\
  kmers in memory")
@@ -73,6 +107,6 @@ class kmer_maker(object):
         else:
             opt = 'y'
         if opt == 'y':
-            for filename in glob.glob(filePrefix+"*"+".kmers"):
+            for filename in glob.glob(filePrefix+"*"+fileExten):
                 os.remove(filename)
-            self.kmers = dict()
+            self.kmers.clear()

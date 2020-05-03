@@ -80,6 +80,9 @@ class testKmer(unittest.TestCase):
         kmer.dump()
         kmer.load("", 3)
         self.assertIn("ERR1293055.3", kmer.kmers)
+        kmer.dump()
+        kmer.load("", 4)
+        self.assertIn("ERR1293055.7", kmer.kmers)
         kmer.load("", -1)
         self.assertIn("ERR1293055.100", kmer.kmers)
 
