@@ -19,6 +19,7 @@ args = parser.parse_args()
 
 
 def run():
+    # mapping through the first method
     if args.m == 1:
         reference = decoder(args.r)
         sequence = decoder(args.s)
