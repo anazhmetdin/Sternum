@@ -20,7 +20,7 @@ class kmer_maker(object):
         self.k = k
         self.seq = seq
         self.filePrefix = seq.filePrefix
-        self.currentPatch = 0
+        self.currentBatch = 0
         self.fileExten = ".kmers"
         self.splice(self.seq.seq, overlapping)
 
@@ -64,20 +64,20 @@ class kmer_maker(object):
                 file.close()
         self.kmers.clear()
 
-    def load(self, filePrefix="", patchSize=-1):
+    def load(self, filePrefix="", batchSize=-1):
         """
  Takes filePrefix = str() file-prefix path to where kmers are stored\
- on hard disk and load them to the memory, if patchSize == -1 all files are\
- loaded, else it loads #patchSize reads' kmers
+ on hard disk and load them to the memory, if batchSize == -1 all files are\
+ loaded, else it loads #batchSize reads' kmers
         """
         fileExten = self.fileExten
-        flag = False  # detect if this is the last patch
-        if patchSize <= 0:
-            patchSize = self.seqCount-self.currentPatch
-        if self.currentPatch+patchSize > self.seqCount:
-            patchSize = self.seqCount-self.currentPatch
+        flag = False  # detect if this is the last batch
+        if batchSize <= 0:
+            batchSize = self.seqCount-self.currentBatch
+        if self.currentBatch+batchSize > self.seqCount:
+            batchSize = self.seqCount-self.currentBatch
             flag = True
-        for i in range(self.currentPatch, self.currentPatch+patchSize):
+        for i in range(self.currentBatch, self.currentBatch+batchSize):
             for filename in glob.glob(filePrefix+"_"+str(i)+"_*"+fileExten):
                 file = open(filename, 'r')
                 seqPos = filename.rfind("_")
@@ -88,7 +88,7 @@ class kmer_maker(object):
                     line = line.rstrip('\n').split('\t')
                     self.kmers[readID].append([line[0], int(line[1])])
                 file.close()
-        self.currentPatch += patchSize
+        self.currentBatch += batchSize
         if flag:
             self.clear(True, filePrefix)
             return flag  # would be usefule to be used in external conditions

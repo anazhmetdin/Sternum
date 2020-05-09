@@ -1,18 +1,18 @@
 class mapper():
-    def __init__(self, reference, sequence, trie, patchSize=-1):
+    def __init__(self, reference, sequence, trie, batchSize=-1):
         """
  Takes reference and sequence as kmer_maker() objects and Trie() object\
  ,then, it starts adding the reference to the trie kmer by kmer.\
- Then, starts mapping the sequence based on the patchSize, if patchSize != -1\
- it will automatically dump data to the disk and loads patch by patch
+ Then, starts mapping the sequence based on the batchSize, if batchSize != -1\
+ it will automatically dump data to the disk and loads batch by batch
         """
         self.reference = reference
         self.sequence = sequence
         self.trie = trie
-        self.patchSize = patchSize
+        self.batchSize = batchSize
         self.matching = dict()
         self.add_reference()
-        self.map_sequence(self.patchSize)
+        self.map_sequence(self.batchSize)
 
     def add_reference(self):
         """
@@ -22,12 +22,12 @@ class mapper():
             for kmer in self.reference.kmers[readID]:
                 self.trie.add_suffix(kmer[0], readID, kmer[1])
 
-    def map_sequence(self, patchSize=-1):
+    def map_sequence(self, batchSize=-1):
         """
- It maps the sequence based on the patchSize, if patchSize != -1\
- it will automatically dump data to the disk and loads patch by patch
+ It maps the sequence based on the batchSize, if batchSize != -1\
+ it will automatically dump data to the disk and loads batch by batch
         """
-        if patchSize == -1:
+        if batchSize == -1:
             for readID in self.sequence.kmers:
                 for kmer in self.sequence.kmers[readID]:
                     refMatched = self.trie.find_suffix(kmer[0])
@@ -35,10 +35,10 @@ class mapper():
                         self.match(readID, kmer[1], refMatched)
         else:
             self.sequence.dump(self.sequence.filePrefix)
-            if self.sequence.load(self.sequence.filePrefix, self.patchSize):
+            if self.sequence.load(self.sequence.filePrefix, self.batchSize):
                 return
             self.map_sequence()
-            self.map_sequence(self.patchSize)
+            self.map_sequence(self.batchSize)
 
     def match(self, readID, kPos, refMatched):
         """

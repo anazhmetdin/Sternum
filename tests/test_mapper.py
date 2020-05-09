@@ -7,9 +7,9 @@ from mapper import mapper
 
 class testMapper(unittest.TestCase):
 
-    def test_mapper_no_patches(self):
+    def test_mapper_no_batches(self):
         """
-        Test mapping case with no patches
+        Test mapping case with no batches
         """
         sternum = initiate_case(-1)
         self.assertIn("ERR1293055.19", sternum.matching)
@@ -17,9 +17,9 @@ class testMapper(unittest.TestCase):
         self.assertEqual([[[0, 195], 763]], sternum.matching["ERR1293055\
 .77"]["KR233687.2.1"])
 
-    def test_mapper_patches(self):
+    def test_mapper_batches(self):
         """
-        Test mapping case with patches
+        Test mapping case with batches
         """
         sternum = initiate_case(30)
         self.assertIn("ERR1293055.77", sternum.matching)
@@ -28,13 +28,13 @@ class testMapper(unittest.TestCase):
 .19"]["KR233687.2.1"])
 
 
-def initiate_case(patchSize):
+def initiate_case(batchSize):
     reference = decoder("data/KR233687.fasta")
     sequence = decoder("data/ERR1293055_first100.fastq")
     refKmer = kmer_maker(13, reference, True)
     seqKmer = kmer_maker(13, sequence, False)
     reference_trie = Trie()
-    sternum = mapper(refKmer, seqKmer, reference_trie, patchSize)
+    sternum = mapper(refKmer, seqKmer, reference_trie, batchSize)
     sternum.filter_matching()
     return sternum
 

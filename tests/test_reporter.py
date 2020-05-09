@@ -4,11 +4,11 @@ from reporter import reporter
 from tests.test_mapper import initiate_case
 
 
-class testMapperNoPatches(unittest.TestCase):
+class testMapperNoBatches(unittest.TestCase):
 
     def test_trie_insertion(self):
         """
-        Test mapping case with no patches
+        Test mapping case with no batches
         """
         sternum = initiate_case(-1)
         reporter(sternum)
