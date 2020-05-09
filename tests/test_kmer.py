@@ -1,4 +1,5 @@
 import unittest
+import glob
 from kmer import kmer_maker
 from decode import decoder
 
@@ -95,7 +96,9 @@ class testKmer(unittest.TestCase):
         kmer = kmer_maker(13, fastaFile, False)
         kmer.dump()
         kmer.clear()
+        files = glob.glob(kmer.filePrefix+"_*"+kmer.fileExten)
         self.assertEqual(dict(), kmer.kmers)
+        self.assertEqual(files, [])
 
 
 if __name__ == '__main__':

@@ -62,7 +62,7 @@ class mapper():
             matched = [[kPos, self.reference.k], refInst[1]]
             matchInst[refInst[0]].append(matched)
 
-    def filter_matching(self, minKmer, minQuotient):
+    def filter_matching(self, minKmer=10, minQuotient=70):
         """
  It taks minKmer = int() minimum number of kmers matching the refernce to keep\
  the read in "matching", and minQuotient = int() from 0 to 100 minimum\
