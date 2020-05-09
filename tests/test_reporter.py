@@ -1,10 +1,7 @@
 import unittest
 import os
-from decode import decoder
-from kmer import kmer_maker
-from trie import Trie
-from mapper import mapper
 from reporter import reporter
+from tests.test_mapper import initiate_case
 
 
 class testMapperNoPatches(unittest.TestCase):
@@ -13,19 +10,13 @@ class testMapperNoPatches(unittest.TestCase):
         """
         Test mapping case with no patches
         """
-        reference = decoder("data/KR233687.fasta")
-        sequence = decoder("data/ERR1293055_first100.fastq")
-        refKmer = kmer_maker(13, reference, True)
-        seqKmer = kmer_maker(13, sequence, False)
-        reference_trie = Trie()
-        sternum = mapper(refKmer, seqKmer, reference_trie, -1)
-        sternum.filter_matching()
+        sternum = initiate_case(-1)
         reporter(sternum)
         file = open("ERR1293055.pSAM")
         line = file.readline()
         file.close()
-        self.assertIn("ERR1293055.19	None	14 728	None	None	None\
-	CTGGCGGAGAAGTGAGAAAT", line)
+        self.assertIn("ERR1293055.19\tNone\t14 728\tNone\tNone\tNone\
+\tCTGGCGGAGAAGTGAGAAAT", line)
         os.remove("ERR1293055.pSAM")
 
 
