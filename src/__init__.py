@@ -3,6 +3,7 @@ from decode import decoder
 from trie import Trie
 from kmer import kmer_maker
 from mapper import mapper
+from reporter import reporter
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-m", default=1, help="Which method to use? 1:trie 2:suffi\
@@ -15,6 +16,7 @@ parser.add_argument("-c", default=10, help="Min allowed count of matching\
  kmers")
 parser.add_argument("-q", default=70, help="Min allowed matching similarity\
  percentage")
+parser.add_argument("-o", default="", help="Output file prefix path")
 args = parser.parse_args()
 
 
@@ -28,3 +30,4 @@ def run():
         reference_trie = Trie()
         sternum = mapper(refKmer, seqKmer, reference_trie, int(args.p))
         sternum.filter_matching(int(args.c), int(args.q))
+        reporter(sternum, args.o)
