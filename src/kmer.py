@@ -8,12 +8,12 @@ class kmer_maker(object):
  Takes k = int() k-mer size, seq = decoder() object, overlapping = boolean()\
  to process the sequence and store it in "kmers", which is a dictionary\
  following template:
- {readID.1: ["kmer", "kmer", ..., "kmer"]
-  readID.2: ["kmer", "kmer", ..., "kmer"]
+ {readID.1: [["kmer", kPos], ["kmer", kPos], ..., ["kmer", kPos]]
+  readID.2: [["kmer", kPos], ["kmer", kPos], ..., ["kmer", kPos]]
   .
   .
   .
-  readIDn: ["kmer", "kmer", ..., "kmer"]}
+  readIDn: [["kmer", kPos], ["kmer", kPos], ..., ["kmer", kPos]]}
         """
         self.kmers = dict()
         self.seqCount = 0
@@ -29,12 +29,12 @@ class kmer_maker(object):
  Takes seq = decoder() object, overlapping = boolean()\
  to process the sequence and store it in "kmers", which is a dictionary\
  following template:
- {readID.1: ["kmer", "kmer", ..., "kmer"]
-  readID.2: ["kmer", "kmer", ..., "kmer"]
+ {readID.1: [["kmer", kPos], ["kmer", kPos], ..., ["kmer", kPos]]
+  readID.2: [["kmer", kPos], ["kmer", kPos], ..., ["kmer", kPos]]
   .
   .
   .
-  readIDn: ["kmer", "kmer", ..., "kmer"]}
+  readIDn: [["kmer", kPos], ["kmer", kPos], ..., ["kmer", kPos]]}
         """
         if overlapping:
             step = 1
