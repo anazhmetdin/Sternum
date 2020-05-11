@@ -23,7 +23,7 @@ class reporter():
                 for matchInst in self.matching[readID][refID]:
                     line = readID + '\tNone'
                     line += '\t' + str(matchInst[0][0] + 1)
-                    line += ' ' +str(matchInst[1] + 1)
+                    line += ' ' + str(matchInst[1] + 1)
                     line += '\tNone' + '\tNone' + '\tNone'
                     line += '\t' + self.sequence[readID] + '\n'
                     lines.append(line)

@@ -25,14 +25,15 @@ class mapper():
         current_pos = 0
         for readID in self.refKmer.kmers:
             for kmer in self.refKmer.kmers[readID]:
-                if type(self.spine) is Trie:
+                if isinstance(self.spine, Trie):
                     self.spine.add_suffix(kmer[0], readID, kmer[1])
-                elif type(self.spine) is SA:
+                elif isinstance(self.spine, SA):
                     actual_pos = current_pos + kmer[1]
                     self.spine.add_suffix(kmer[0], actual_pos)
+                    temp = actual_pos
             current_pos += len(self.refKmer.seq.seq[readID])
-        if type(self.spine) is SA:
-            self.spine.add_suffix(kmer[0], actual_pos, True)
+        if isinstance(self.spine, SA):
+            self.spine.add_suffix(kmer[0], temp, True)
 
     def map_sequence(self, batchSize=-1):
         """
