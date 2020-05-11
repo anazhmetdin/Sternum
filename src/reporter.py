@@ -5,7 +5,7 @@ class reporter():
  per match: read name, position, and read sequence
         """
         self.matching = sternum.matching
-        self.sequence = sternum.sequence.seq.seq
+        self.sequence = sternum.seqKmer.seq.seq
         self.filePrefix = filePrefix
         self.report(filePrefix)
 

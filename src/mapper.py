@@ -1,13 +1,13 @@
 class mapper():
-    def __init__(self, reference, sequence, trie, batchSize=-1):
+    def __init__(self, refKmer, seqKmer, trie, batchSize=-1):
         """
  Takes reference and sequence as kmer_maker() objects and Trie() object\
  ,then, it starts adding the reference to the trie kmer by kmer.\
  Then, starts mapping the sequence based on the batchSize, if batchSize != -1\
  it will automatically dump data to the disk and loads batch by batch
         """
-        self.reference = reference
-        self.sequence = sequence
+        self.refKmer = refKmer
+        self.seqKmer = seqKmer
         self.trie = trie
         self.batchSize = batchSize
         self.matching = dict()
@@ -18,8 +18,8 @@ class mapper():
         """
  It adds the reference to the trie kmer by kmer
         """
-        for readID in self.reference.kmers:
-            for kmer in self.reference.kmers[readID]:
+        for readID in self.refKmer.kmers:
+            for kmer in self.refKmer.kmers[readID]:
                 self.trie.add_suffix(kmer[0], readID, kmer[1])
 
     def map_sequence(self, batchSize=-1):
@@ -28,14 +28,14 @@ class mapper():
  it will automatically dump data to the disk and loads batch by batch
         """
         if batchSize == -1:
-            for readID in self.sequence.kmers:
-                for kmer in self.sequence.kmers[readID]:
+            for readID in self.seqKmer.kmers:
+                for kmer in self.seqKmer.kmers[readID]:
                     refMatched = self.trie.find_suffix(kmer[0])
                     if refMatched != -1:
                         self.match(readID, kmer[1], refMatched)
         else:
-            self.sequence.dump(self.sequence.filePrefix)
-            if self.sequence.load(self.sequence.filePrefix, self.batchSize):
+            self.seqKmer.dump(self.seqKmer.filePrefix)
+            if self.seqKmer.load(self.seqKmer.filePrefix, self.batchSize):
                 return
             self.map_sequence()
             self.map_sequence(self.batchSize)
@@ -59,7 +59,7 @@ class mapper():
         for refInst in refMatched:
             if refInst[0] not in matchInst:
                 matchInst[refInst[0]] = []
-            matched = [[kPos, self.reference.k], refInst[1]]
+            matched = [[kPos, self.refKmer.k], refInst[1]]
             matchInst[refInst[0]].append(matched)
 
     def filter_matching(self, minKmer=10, minQuotient=70):
@@ -70,7 +70,7 @@ class mapper():
  covered aread only
         """
         emptyRef = []  # to store referenceID which no longer has matches
-        k = self.reference.k
+        k = self.refKmer.k
         for readID in self.matching:  # {refID: [[[kPos, k-size]], refID:....
             for refID in self.matching[readID]:
                 matchInst = self.matching[readID][refID]  # [[[kPos, k], rpos]]
