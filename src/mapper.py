@@ -1,44 +1,56 @@
+from trie import Trie
+from sufxArr import SA
+
+
 class mapper():
-    def __init__(self, reference, sequence, trie, patchSize=-1):
+    def __init__(self, refKmer, seqKmer, spine, batchSize=-1):
         """
- Takes reference and sequence as kmer_maker() objects and Trie() object\
- ,then, it starts adding the reference to the trie kmer by kmer.\
- Then, starts mapping the sequence based on the patchSize, if patchSize != -1\
- it will automatically dump data to the disk and loads patch by patch
+ Takes reference and sequence as kmer_maker() objects and spine() object\
+ ,then, it starts adding the reference to the spine kmer by kmer.\
+ Then, starts mapping the sequence based on the batchSize, if batchSize != -1\
+ it will automatically dump data to the disk and loads batch by batch
         """
-        self.reference = reference
-        self.sequence = sequence
-        self.trie = trie
-        self.patchSize = patchSize
+        self.refKmer = refKmer
+        self.seqKmer = seqKmer
+        self.spine = spine
+        self.batchSize = batchSize
         self.matching = dict()
         self.add_reference()
-        self.map_sequence(self.patchSize)
+        self.map_sequence(self.batchSize)
 
     def add_reference(self):
         """
- It adds the reference to the trie kmer by kmer
+ It adds the reference to the spine kmer by kmer
         """
-        for readID in self.reference.kmers:
-            for kmer in self.reference.kmers[readID]:
-                self.trie.add_suffix(kmer[0], readID, kmer[1])
+        current_pos = 0
+        for readID in self.refKmer.kmers:
+            for kmer in self.refKmer.kmers[readID]:
+                if type(self.spine) is Trie:
+                    self.spine.add_suffix(kmer[0], readID, kmer[1])
+                elif type(self.spine) is SA:
+                    actual_pos = current_pos + kmer[1]
+                    self.spine.add_suffix(kmer[0], actual_pos)
+            current_pos += len(self.refKmer.seq.seq[readID])
+        if type(self.spine) is SA:
+            self.spine.add_suffix(kmer[0], actual_pos, True)
 
-    def map_sequence(self, patchSize=-1):
+    def map_sequence(self, batchSize=-1):
         """
- It maps the sequence based on the patchSize, if patchSize != -1\
- it will automatically dump data to the disk and loads patch by patch
+ It maps the sequence based on the batchSize, if batchSize != -1\
+ it will automatically dump data to the disk and loads batch by batch
         """
-        if patchSize == -1:
-            for readID in self.sequence.kmers:
-                for kmer in self.sequence.kmers[readID]:
-                    refMatched = self.trie.find_suffix(kmer[0])
+        if batchSize == -1:
+            for readID in self.seqKmer.kmers:
+                for kmer in self.seqKmer.kmers[readID]:
+                    refMatched = self.spine.find_suffix(kmer[0])
                     if refMatched != -1:
                         self.match(readID, kmer[1], refMatched)
         else:
-            self.sequence.dump(self.sequence.filePrefix)
-            if self.sequence.load(self.sequence.filePrefix, self.patchSize):
+            self.seqKmer.dump(self.seqKmer.filePrefix)
+            if self.seqKmer.load(self.seqKmer.filePrefix, self.batchSize):
                 return
             self.map_sequence()
-            self.map_sequence(self.patchSize)
+            self.map_sequence(self.batchSize)
 
     def match(self, readID, kPos, refMatched):
         """
@@ -59,7 +71,7 @@ class mapper():
         for refInst in refMatched:
             if refInst[0] not in matchInst:
                 matchInst[refInst[0]] = []
-            matched = [[kPos, self.reference.k], refInst[1]]
+            matched = [[kPos, self.refKmer.k], refInst[1]]
             matchInst[refInst[0]].append(matched)
 
     def filter_matching(self, minKmer=10, minQuotient=70):
@@ -70,7 +82,7 @@ class mapper():
  covered aread only
         """
         emptyRef = []  # to store referenceID which no longer has matches
-        k = self.reference.k
+        k = self.refKmer.k
         for readID in self.matching:  # {refID: [[[kPos, k-size]], refID:....
             for refID in self.matching[readID]:
                 matchInst = self.matching[readID][refID]  # [[[kPos, k], rpos]]
