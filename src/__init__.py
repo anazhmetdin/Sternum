@@ -28,9 +28,9 @@ def run():
     refKmer = kmer_maker(int(args.k), reference, True)
     seqKmer = kmer_maker(int(args.k), sequence, False)
     if int(args.m) == 1:  # mapping through Suffix Trie
-        reference_trie = Trie()
-        sternum = mapper(refKmer, seqKmer, reference_trie, int(args.b))
-        sternum.filter_matching(int(args.c), int(args.p))
-        reporter(sternum, args.o)
+        spine = Trie()
     elif int(args.m) == 2:  # mapping through Suffix Array
-        reference_sa = SA(reference)
+        spine = SA(reference)
+    sternum = mapper(refKmer, seqKmer, spine, int(args.b))
+    sternum.filter_matching(int(args.c), int(args.p))
+    reporter(sternum, args.o)

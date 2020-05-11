@@ -7,6 +7,7 @@ class SA():
         contains the reference that will be mapped to it.
 
     """
+
     def __init__(self, reference):
         """
 sa : list:
@@ -16,9 +17,9 @@ sa : list:
         self.reference = reference
         # index : list
         # [[readID, len], [readID, len]] for reads in reference
-        self.index = [[y, len(x)] for y,x in reference.seq.items()]
+        self.index = [[y, len(x)] for y, x in reference.seq.items()]
         # [[readID, last pos], [readID, last pos]] for reads in reference
-        for read in range(1,len(self.index)):
+        for read in range(1, len(self.index)):
             self.index[read][1] += self.index[read-1][1]
         self.toBeSorted = dict()
 
@@ -114,8 +115,8 @@ sa : list:
  dictionary, if not found it returns -1. When suffix ends, ['$'] is returned
         """
         s = 0
-        e = len(self.sa)
-        while s <= e :
+        e = len(self.sa)-1
+        while s <= e:
             m = int(s + (e - s)/2)
             readID, pos, res = self.comp_alph(m, suffix)  # readID, pos of Ref
             matches = []

@@ -1,14 +1,18 @@
+from trie import Trie
+from sufxArr import SA
+
+
 class mapper():
-    def __init__(self, refKmer, seqKmer, trie, batchSize=-1):
+    def __init__(self, refKmer, seqKmer, spine, batchSize=-1):
         """
- Takes reference and sequence as kmer_maker() objects and Trie() object\
- ,then, it starts adding the reference to the trie kmer by kmer.\
+ Takes reference and sequence as kmer_maker() objects and spine() object\
+ ,then, it starts adding the reference to the spine kmer by kmer.\
  Then, starts mapping the sequence based on the batchSize, if batchSize != -1\
  it will automatically dump data to the disk and loads batch by batch
         """
         self.refKmer = refKmer
         self.seqKmer = seqKmer
-        self.trie = trie
+        self.spine = spine
         self.batchSize = batchSize
         self.matching = dict()
         self.add_reference()
@@ -16,11 +20,19 @@ class mapper():
 
     def add_reference(self):
         """
- It adds the reference to the trie kmer by kmer
+ It adds the reference to the spine kmer by kmer
         """
+        current_pos = 0
         for readID in self.refKmer.kmers:
             for kmer in self.refKmer.kmers[readID]:
-                self.trie.add_suffix(kmer[0], readID, kmer[1])
+                if type(self.spine) is Trie:
+                    self.spine.add_suffix(kmer[0], readID, kmer[1])
+                elif type(self.spine) is SA:
+                    actual_pos = current_pos + kmer[1]
+                    self.spine.add_suffix(kmer[0], actual_pos)
+            current_pos += len(self.refKmer.seq.seq[readID])
+        if type(self.spine) is SA:
+            self.spine.add_suffix(kmer[0], actual_pos, True)
 
     def map_sequence(self, batchSize=-1):
         """
@@ -30,7 +42,7 @@ class mapper():
         if batchSize == -1:
             for readID in self.seqKmer.kmers:
                 for kmer in self.seqKmer.kmers[readID]:
-                    refMatched = self.trie.find_suffix(kmer[0])
+                    refMatched = self.spine.find_suffix(kmer[0])
                     if refMatched != -1:
                         self.match(readID, kmer[1], refMatched)
         else:
