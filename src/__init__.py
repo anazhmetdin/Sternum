@@ -2,6 +2,7 @@ import argparse
 from decode import decoder
 from trie import Trie
 from sufxArr import SA
+from BWT import BWT
 from kmer import kmer_maker
 from mapper import mapper
 from reporter import reporter
@@ -25,7 +26,11 @@ args = parser.parse_args()
 def run():
     reference = decoder(args.r)
     sequence = decoder(args.s)
-    refKmer = kmer_maker(int(args.k), reference, True)
+    if int(args.m) == 3:
+        spine = BWT(reference)
+        refKmer = reference
+    else:
+        refKmer = kmer_maker(int(args.k), reference, True)
     seqKmer = kmer_maker(int(args.k), sequence, False)
     if int(args.m) == 1:  # mapping through Suffix Trie
         spine = Trie()
@@ -33,4 +38,4 @@ def run():
         spine = SA(reference)
     sternum = mapper(refKmer, seqKmer, spine, int(args.b))
     sternum.filter_matching(int(args.c), int(args.p))
-    reporter(sternum, args.o)
+    reporter(sternum, args.o+"_"+str(args.m)+"_")

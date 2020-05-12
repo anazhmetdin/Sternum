@@ -15,12 +15,7 @@ sa : list:
         """
         self.sa = []
         self.reference = reference
-        # index : list
-        # [[readID, len], [readID, len]] for reads in reference
-        self.index = [[y, len(x)] for y, x in reference.seq.items()]
-        # [[readID, last pos], [readID, last pos]] for reads in reference
-        for read in range(1, len(self.index)):
-            self.index[read][1] += self.index[read-1][1]
+        self.index = make_index(reference)
         self.toBeSorted = dict()
 
     def add_suffix(self, suffix, pos, order=False):
@@ -43,24 +38,6 @@ sa : list:
                 self.sa.append(v)
             self.toBeSorted.clear()
 
-    def find_index(self, pos):
-        """Short summary.
-
-        Parameters
-        ----------
-        pos : type
-            Description of parameter `pos`.
-
-        Returns
-        -------
-        type
-            Description of returned object.
-
-        """
-        for read in range(len(self.index)):
-            if pos < self.index[read][1]:
-                return self.index[read], read
-
     def comp_alph(self, m, suffix):
         """compares two strings alphabtically.
 
@@ -82,7 +59,7 @@ sa : list:
 
         """
         pos = self.sa[m]
-        read, readNum = self.find_index(pos)
+        read, readNum = find_index(self.index, pos)
         if readNum != 0:
             pos -= self.index[readNum-1][1]
         s1 = suffix
@@ -138,3 +115,46 @@ sa : list:
             else:
                 s = m + 1
         return -1
+
+
+def make_index(reference):
+    """store summary info from decoder object.
+
+    Parameters
+    ----------
+    reference : decoder
+
+    Returns
+    -------
+    list
+        [[readID, last pos], [readID, last pos]]
+
+    """
+    # index : list
+    # [[readID, len], [readID, len]] for reads in reference
+    index = [[y, len(x)] for y, x in reference.seq.items()]
+    # [[readID, last pos], [readID, last pos]] for reads in reference
+    for read in range(1, len(index)):
+        index[read][1] += index[read-1][1]
+    return index
+
+
+def find_index(index, pos):
+    """find the read from refrence whihc pos belongs to.
+
+    Parameters
+    ----------
+    pos : int
+        actual pos in the whole reference
+    index : list
+        [[readID, last pos], [readID, last pos]]
+
+    Returns
+    -------
+    list
+        [[readID, last pos], readIndex]
+
+    """
+    for read in range(len(index)):
+        if pos < index[read][1]:
+            return index[read], read

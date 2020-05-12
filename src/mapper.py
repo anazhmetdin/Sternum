@@ -1,16 +1,17 @@
 from trie import Trie
 from sufxArr import SA
+from BWT import BWT
 
 
 class mapper():
-    def __init__(self, refKmer, seqKmer, spine, batchSize=-1):
+    def __init__(self, reference, seqKmer, spine, batchSize=-1):
         """
  Takes reference and sequence as kmer_maker() objects and spine() object\
  ,then, it starts adding the reference to the spine kmer by kmer.\
  Then, starts mapping the sequence based on the batchSize, if batchSize != -1\
  it will automatically dump data to the disk and loads batch by batch
         """
-        self.refKmer = refKmer
+        self.reference = reference
         self.seqKmer = seqKmer
         self.spine = spine
         self.batchSize = batchSize
@@ -22,18 +23,25 @@ class mapper():
         """
  It adds the reference to the spine kmer by kmer
         """
-        current_pos = 0
-        for readID in self.refKmer.kmers:
-            for kmer in self.refKmer.kmers[readID]:
-                if isinstance(self.spine, Trie):
-                    self.spine.add_suffix(kmer[0], readID, kmer[1])
-                elif isinstance(self.spine, SA):
-                    actual_pos = current_pos + kmer[1]
-                    self.spine.add_suffix(kmer[0], actual_pos)
-                    temp = actual_pos
-            current_pos += len(self.refKmer.seq.seq[readID])
-        if isinstance(self.spine, SA):
-            self.spine.add_suffix(kmer[0], temp, True)
+        if not isinstance(self.spine, BWT):
+            current_pos = 0
+            for readID in self.reference.kmers:
+                for kmer in self.reference.kmers[readID]:
+                    if isinstance(self.spine, Trie):
+                        self.spine.add_suffix(kmer[0], readID, kmer[1])
+                    elif isinstance(self.spine, SA):
+                        actual_pos = current_pos + kmer[1]
+                        self.spine.add_suffix(kmer[0], actual_pos)
+                        temp = actual_pos
+                current_pos += len(self.reference.seq.seq[readID])
+            if isinstance(self.spine, SA):
+                self.spine.add_suffix(kmer[0], temp, True)
+        else:
+            refV = list(self.reference.seq.values())
+            reference_conc = "".join([x for x in refV])+'$'
+            for i in range(len(reference_conc)):
+                self.spine.add_suffix(reference_conc[i:], i)
+            self.spine.add_suffix(reference_conc[i:], i, reference_conc, True)
 
     def map_sequence(self, batchSize=-1):
         """
@@ -72,7 +80,7 @@ class mapper():
         for refInst in refMatched:
             if refInst[0] not in matchInst:
                 matchInst[refInst[0]] = []
-            matched = [[kPos, self.refKmer.k], refInst[1]]
+            matched = [[kPos, self.seqKmer.k], refInst[1]]
             matchInst[refInst[0]].append(matched)
 
     def filter_matching(self, minKmer=10, minQuotient=70):
@@ -83,7 +91,7 @@ class mapper():
  covered aread only
         """
         emptyRef = []  # to store referenceID which no longer has matches
-        k = self.refKmer.k
+        k = self.seqKmer.k
         for readID in self.matching:  # {refID: [[[kPos, k-size]], refID:....
             for refID in self.matching[readID]:
                 matchInst = self.matching[readID][refID]  # [[[kPos, k], rpos]]
