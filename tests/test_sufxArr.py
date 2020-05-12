@@ -27,7 +27,7 @@ class testSufxArr(unittest.TestCase):
         self.assertEqual(result, 5)
         self.assertEqual(result1, 14)
 
-    def test_trie_searching(self):
+    def test_SA_searching(self):
         """
         Test if patterns are read after addition
         """
