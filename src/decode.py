@@ -2,18 +2,35 @@ import os
 
 
 class decoder(object):
+    """store reads.
+
+    Parameters
+    ----------
+    fileName : str
+        file path to be decoded.
+
+    Attributes
+    ----------
+    seq : dict
+        {readID.1: "sequence",
+         readID.2: "sequence"
+         .
+         .
+         .
+         readIDn: "sequence"}
+    filePrefix : string
+        file path where additional file will be saved
+
+    """
 
     def __init__(self, fileName):
-        """
- Takes the file path "XXXXX.fastx" and automatically detect the proper\
- way to extract the sequence and store it in "seq", which is a dictionary\
- following template:
- {readID.1: "sequence",
-  readID.2: "sequence"
-  .
-  .
-  .
-  readIDn: "sequence"}
+        """automatically detect file type and extract reads.
+
+        Parameters
+        ----------
+        fileName : type
+            file path that will be decoded.
+
         """
         self.seq = dict()
         self.filePrefix = fileName[:fileName.rfind("\\")+1]
@@ -23,15 +40,14 @@ class decoder(object):
             self.fastq(fileName)
 
     def fasta(self, fileName):
-        """
- Takes the fasta file path "XXXXX.fasta"and  extract\
- the sequence and store it in "seq", which is a dictionary following template:
- {readID.1: "sequence",
-  readID.2: "sequence"
-  .
-  .
-  .
-  readIDn: "sequence"}
+        """Takes the fasta file path "XXXXX.fasta"and  extract\
+        the sequence and store it in "seq".
+
+        Parameters
+        ----------
+        fileName : str
+            file path that will be decoded.
+
         """
         if fileName.endswith(".fasta") and os.path.exists(fileName):
             file = open(fileName)
@@ -50,15 +66,14 @@ class decoder(object):
         file.close()
 
     def fastq(self, fileName):
-        """
- Takes the fasta file path "XXXXX.fastq"and  extract\
- the sequence and store it in "seq", which is a dictionary following template:
- {readID.1: "sequence",
-  readID.2: "sequence"
-  .
-  .
-  .
-  readIDn: "sequence"}
+        """Takes the fasta file path "XXXXX.fasta"and  extract\
+        the sequence and store it in "seq".
+
+        Parameters
+        ----------
+        fileName : str
+            file path that will be decoded.
+
         """
         if fileName.endswith(".fastq") and os.path.exists(fileName):
             file = open(fileName)

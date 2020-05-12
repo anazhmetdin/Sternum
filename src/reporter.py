@@ -1,8 +1,26 @@
 class reporter():
+    """generate pseudo SAM files.
+
+    Parameters
+    ----------
+    sternum : mapper
+        mpper object having matches.
+    filePrefix : str
+        file path prefix of output file.
+
+    """
+
     def __init__(self, sternum, filePrefix=""):
-        """
- Takes sternum = mapper() and output a pseudo SAM file with limited fields\
- per match: read name, position, and read sequence
+        """output a pseudo SAM file with limited fields\
+        per match: read name, position, and read sequence.
+
+        Parameters
+        ----------
+        sternum : mapper
+            mpper object having matches.
+        filePrefix : str
+            file path prefix of output file.
+
         """
         self.matching = sternum.matching
         self.sequence = sternum.seqKmer.seq.seq
@@ -10,9 +28,14 @@ class reporter():
         self.report(filePrefix)
 
     def report(self, filePrefix=""):
-        """
- output file to filePrefix following this pattern per line:
- read_name    None    position    None    None    None    read sequence
+        """ output file to filePrefix following this pattern per line:
+        read_name    None    position    None    None    None    read sequence
+
+        Parameters
+        ----------
+        filePrefix : str
+            file path prefix of output file.
+
         """
         readName = list(self.sequence.keys())[0]
         readName = readName[: readName.find(".")]
@@ -23,7 +46,7 @@ class reporter():
                 for matchInst in self.matching[readID][refID]:
                     line = readID + '\tNone'
                     line += '\t' + str(matchInst[0][0] + 1)
-                    line += ' ' +str(matchInst[1] + 1)
+                    line += ' ' + str(matchInst[1] + 1)
                     line += '\tNone' + '\tNone' + '\tNone'
                     line += '\t' + self.sequence[readID] + '\n'
                     lines.append(line)
