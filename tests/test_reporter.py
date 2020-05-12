@@ -4,9 +4,9 @@ from reporter import reporter
 from tests.test_mapper import initiate_case
 
 
-class testMapperNoBatches(unittest.TestCase):
+class testReporter(unittest.TestCase):
 
-    def test_trie_insertion(self):
+    def test_file_maker(self):
         """
         Test mapping case with no batches
         """
