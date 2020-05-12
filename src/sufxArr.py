@@ -86,10 +86,6 @@ class SA():
             [[refID, kPos], [refID, kPos]] if pattern is found
 
         """
-        """
- Takes suffix = str() and search for each letter in suffix in its level'\
- dictionary, if not found it returns -1. When suffix ends, ['$'] is returned
-        """
         s = 0
         e = len(self.sa)-1
         while s <= e:
