@@ -4,12 +4,45 @@ from BWT import BWT
 
 
 class mapper():
+    """main class of sternum and responsible for match reference to kmers.
+
+    Attributes
+    ----------
+    matching : dict
+{readID: {refID: [[[kPos, k-size], refPos], [[kPos, k-size], refPos]]}
+ readID: {refID: [[[kPos, k-size], refPos]], refID: [[[kPos, k-size], refPos]]}
+
+    Parameters
+    ----------
+    reference : kmer_maker or decoder
+        if matching using Trie or sufxArr, should be kmer_maker.
+        if matching using BWT, should be decoder
+    seqKmer : kmer_maker
+        kmers of the sequence to be matched.
+    spine : Trie, or sufxArr, or BWT
+        where reference will be stored for matching.
+    batchSize : int
+        number of files to be matched per iteration, if -1 no batches are used.
+
+    """
+
     def __init__(self, reference, seqKmer, spine, batchSize=-1):
-        """
- Takes reference and sequence as kmer_maker() objects and spine() object\
- ,then, it starts adding the reference to the spine kmer by kmer.\
- Then, starts mapping the sequence based on the batchSize, if batchSize != -1\
- it will automatically dump data to the disk and loads batch by batch
+        """adds the reference to the spine then mapa the sequence\
+        based on batchSize.
+
+        Parameters
+        ----------
+        reference : kmer_maker or decoder
+            if matching using Trie or sufxArr, should be kmer_maker.
+            if matching using BWT, should be decoder
+        seqKmer : kmer_maker
+            kmers of the sequence to be matched.
+        spine : Trie, or sufxArr, or BWT
+            where reference will be stored for matching.
+        batchSize : int
+            number of files to be matched per iteration,
+            if -1 no batches are used.
+
         """
         self.reference = reference
         self.seqKmer = seqKmer
@@ -21,9 +54,16 @@ class mapper():
 
     def add_reference(self):
         """
- It adds the reference to the spine kmer by kmer
+        adds the reference to the spine
         """
-        if not isinstance(self.spine, BWT):
+        if isinstance(self.spine, BWT):
+            refV = list(self.reference.seq.values())
+            reference_conc = "".join([x for x in refV])+'$'
+            for i in range(len(reference_conc)):
+                self.spine.add_suffix(reference_conc[i:], i)
+            self.spine.add_suffix(reference_conc[i:], i, reference_conc, True)
+            del reference_conc
+        else:
             current_pos = 0
             for readID in self.reference.kmers:
                 for kmer in self.reference.kmers[readID]:
@@ -36,17 +76,16 @@ class mapper():
                 current_pos += len(self.reference.seq.seq[readID])
             if isinstance(self.spine, SA):
                 self.spine.add_suffix(kmer[0], temp, True)
-        else:
-            refV = list(self.reference.seq.values())
-            reference_conc = "".join([x for x in refV])+'$'
-            for i in range(len(reference_conc)):
-                self.spine.add_suffix(reference_conc[i:], i)
-            self.spine.add_suffix(reference_conc[i:], i, reference_conc, True)
 
     def map_sequence(self, batchSize=-1):
-        """
- It maps the sequence based on the batchSize, if batchSize != -1\
- it will automatically dump data to the disk and loads batch by batch
+        """maps the sequence based on the batchSize.
+
+        Parameters
+        ----------
+        batchSize : int
+            number of files to be matched per iteration,
+            if -1 no batches are used.
+
         """
         if batchSize == -1:
             for readID in self.seqKmer.kmers:
@@ -62,17 +101,16 @@ class mapper():
             self.map_sequence(self.batchSize)
 
     def match(self, readID, kPos, refMatched):
-        """
- It taks readID = str(), kPos = int() kmer position,and refMatched = listt()\
- following this pattern:
- [[readID, kmer-pos], [readID, kmer-pos], ..., [readID, kmer-pos]]
- Them, it fills "matching", which is a dictionary following this pattern:
- {readID: {refID: [[[kPos, k-size], refPos], [[kPos, k-size], refPos]]}
- readID: {refID: [[[kPos, k-size], refPos]], refID: [[[kPos, k-size], refPos]]}
-  .
-  .
-  .
-  readID: {refID: [[[kPos, k-size], refPos], [[kPos, k-size], refPos]]}}
+        """append match instance to matching dictionary.
+
+        Parameters
+        ----------
+        readID : str
+            readID of the sequence matched to reference.
+        kPos : int
+            kmer position in sequence.
+        refMatched : list
+            [[readID, matchPos], [readID, matchPos], ..., [readID, matchPos]]
         """
         if readID not in self.matching:
             self.matching[readID] = dict()
@@ -84,11 +122,17 @@ class mapper():
             matchInst[refInst[0]].append(matched)
 
     def filter_matching(self, minKmer=10, minQuotient=70):
-        """
- It taks minKmer = int() minimum number of kmers matching the refernce to keep\
- the read in "matching", and minQuotient = int() from 0 to 100 minimum\
- percentage of read kmers covering the refernce from start to end of the\
- covered aread only
+        """remove matching instances not meeting criteria.
+
+        Parameters
+        ----------
+        minKmer : int
+            minimum number of kmers matching the refernce.
+        minQuotient : int
+            from 0 to 100 minimum\
+            min percentage of sequence kmers covering the refernce from start\
+            to end of the covered aread only.
+
         """
         emptyRef = []  # to store referenceID which no longer has matches
         k = self.seqKmer.k
@@ -120,6 +164,22 @@ class mapper():
 
 
 def concatenate(matchInst, start):
+    """combine match instances if they are in sync.
+
+    Parameters
+    ----------
+    matchInst : list
+        [[[kPos, k-size], refPos], [[kPos, k-size], refPos]].
+    start : int
+        index to start combining from.
+
+    Returns
+    -------
+    (list, int)
+        (list of kmers used in concatenation, number of concatenated kmers).
+        ([[kPos, k-size], refPos], int)
+
+    """
     concList = []
     comp1 = matchInst[start]
     for i in range(start+1, len(matchInst)):

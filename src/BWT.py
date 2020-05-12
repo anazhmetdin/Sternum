@@ -14,11 +14,10 @@ class BWT():
 
     def __init__(self, reference):
         """
-sa : list:
-[49, 892, 84, 4, ...]
+        bwt : dict
+            {pos: letter, pos: letter, ..., pos: letter}
         """
         self.bwt = dict()
-        self.reference = reference
         # index : list
         # [[readID, len], [readID, len]] for reads in reference
         self.index = make_index(reference)
@@ -26,25 +25,21 @@ sa : list:
         self.last2first = []
 
     def add_suffix(self, suffix, pos, seq="", order=False):
-        """Takes suffix and append it's position suffix array and sort SA\
-         alphabtically if order = True.
+        """Takes suffix and append it's position to bwt and generate bwt\
+         if order = True.
 
         Parameters
         ----------
         suffix : str
-            The suffix to be inserted in SA.
+            The suffix to be inserted in bwt.
         pos : int
             suffix position.
         order : bool
-            whether to order SA or not.
+            whether to generate or not, use this in inserting the last suffix.
 
         """
         self.toBeSorted[suffix] = pos
-        self.bwt = dict()
-        self.last2first = []
         if order:
-            self.toBeSorted.pop(suffix)
-            self.toBeSorted[suffix] = pos
             sa = []
             for _, v in sorted(self.toBeSorted.items()):
                 sa.append(v)
@@ -52,13 +47,13 @@ sa : list:
             n = len(seq)
             for i in sa:
                 self.bwt[+((i+n-1) % n)] = (seq)[(i+n-1) % n]
-                select = itemgetter(1)
-                BV = self.bwt.values()
-            del seq
+            del seq, sa
+            select = itemgetter(1)
+            BV = self.bwt.values()
             first2last = sorted([(i, x) for i, x in enumerate(BV)], key=select)
             self.last2first = [None for i in range(len(self.bwt))]
-            for firstIndex, Xtuples in enumerate(first2last):
-                lastIndex, _ = Xtuples
+            for firstIndex, latTuples in enumerate(first2last):
+                lastIndex, _ = latTuples
                 self.last2first[lastIndex] = firstIndex
 
     def find_suffix(self, suffix):
@@ -76,11 +71,10 @@ sa : list:
             [[refID, kPos], [refID, kPos]] if pattern is found
 
         """
-        sf = 0
-        ef = len(self.bwt)-1
-        # print(self.bwt)
-        sl = sf
-        el = ef
+        sf = 0  # Start index of First column in BWT
+        ef = len(self.bwt)-1  # End index of First column in BWT
+        sl = sf  # Start index of Last column in BWT
+        el = ef  # End index of Last column in BWT
         while sf <= ef:
             symbol = suffix[-1]
             suffix = suffix[: -1]

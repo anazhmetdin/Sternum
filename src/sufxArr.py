@@ -9,9 +9,8 @@ class SA():
     """
 
     def __init__(self, reference):
-        """
-sa : list:
-[49, 892, 84, 4, ...]
+        """sa : list:
+        [indecies of ordered kmers alphabtically]
         """
         self.sa = []
         self.reference = reference
