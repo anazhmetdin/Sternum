@@ -11,9 +11,9 @@ from reporter import reporter
 parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--method", metavar="METHOD", default=1,
                     help="Which method to use? 1:trie 2:suffi x array 3: bwd")
-parser.add_argument("-r", "--reference", metavar="REFERENCE",
+parser.add_argument("-r", "--reference", metavar="REFERENCE", default="",
                     help="Reference file path")
-parser.add_argument("-s", "--sequence", metavar="SEQUENCE",
+parser.add_argument("-s", "--sequence", metavar="SEQUENCE", default="",
                     help="Sequence reads file path")
 parser.add_argument("-k", "--ksize", metavar="KSIZE", default=13,
                     help="k-mer size")
