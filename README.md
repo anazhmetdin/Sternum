@@ -65,7 +65,7 @@ how many sequence reads to be loaded into memory per iteration to be mapped
 ###  Output:
 
 - #### pseudo SAM file `-o` str()
-a file containing only read name, position, and read sequence per match
+a file containing only read name, reference name, position, and read sequence per match
 
 ## Getting started
 
@@ -75,7 +75,7 @@ a file containing only read name, position, and read sequence per match
 
 - In your command line environment:
 
-		pip install path/to/sternum-x.x.x-py2.py3-none-any.whl
+		pip install path/to/sternum-x.x.x-py3-none-any.whl
 
 ### Run an example
 
@@ -84,6 +84,6 @@ a file containing only read name, position, and read sequence per match
 		sternum -m method -r path/to/reference.fastx -s path/to/sequence.fastx -k kmerSize -p minPercentage -c minKcount -b batchSize -o path/to/myfirstmap
 
 - this file will be genrated:
-path/to/myfirstmap_\$m_\$sequenceID.pSAM
+path/to/myfirstmap_\$m_\$sequenceID.sam
 
 - you can try with files in [sternum/data](https://github.com/anegm98/Sternum/tree/master/data)

@@ -12,12 +12,12 @@ class testReporter(unittest.TestCase):
         """
         sternum = initiate_case(-1)
         reporter(sternum)
-        file = open("ERR1293055.pSAM")
+        file = open("ERR1293055.sam")
         line = file.readline()
         file.close()
-        self.assertIn("ERR1293055.19\tNone\t14 728\tNone\tNone\tNone\
+        self.assertIn("ERR1293055.19\t0\tKR233687.2.1\t728\t255\t*\t*\t0\
 \tCTGGCGGAGAAGTGAGAAAT", line)
-        os.remove("ERR1293055.pSAM")
+        os.remove("ERR1293055.sam")
 
 
 if __name__ == '__main__':
