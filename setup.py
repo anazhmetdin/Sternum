@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='sternum',
-    version='1.0.0',
+    version='1.0.1',
     package_dir={"": "src"},
     install_requires=[],
     setup_requires=[],

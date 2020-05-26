@@ -39,16 +39,17 @@ class reporter():
         """
         readName = list(self.sequence.keys())[0]
         readName = readName[: readName.find(".")]
-        file = open(filePrefix+readName+".pSAM", 'w')
+        file = open(filePrefix+readName+".sam", 'w')
         lines = []
         for readID in self.matching:
             for refID in self.matching[readID]:
                 for matchInst in self.matching[readID][refID]:
-                    line = readID + '\tNone'
-                    line += '\t' + str(matchInst[0][0] + 1)
-                    line += ' ' + str(matchInst[1] + 1)
-                    line += '\tNone' + '\tNone' + '\tNone'
-                    line += '\t' + self.sequence[readID] + '\n'
+                    line = readID + '\t0'
+                    line += '\t' + refID
+                    line += '\t' + str(matchInst[1] + 1)
+                    line += '\t255' + '\t*' + '\t*' + '\t0'
+                    line += '\t' + self.sequence[readID]
+                    line += '\t*' + '\n'
                     lines.append(line)
         lines[-1] = lines[-1].rstrip('\n')
         file.writelines(lines)
