@@ -97,13 +97,18 @@ class SA():
                 tempRes = res
                 while tempRes == 0:
                     matches.append([readID, pos])
+                    if tempM == len(self.sa)-1:
+                        break
                     tempM += 1
                     readID, pos, tempRes = self.comp_alph(tempM, suffix)
                 while res == 0:
                     m -= 1
+                    if tempM == -1:
+                        break
                     readID, pos, res = self.comp_alph(m, suffix)
                     matches.append([readID, pos])
-                matches = matches[:-1]  # delete element that broke while loop
+                if res != 0:
+                    matches = matches[:-1]
                 return matches
             if res < 0:
                 e = m - 1
