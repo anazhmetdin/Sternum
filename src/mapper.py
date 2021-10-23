@@ -4,7 +4,8 @@ from BWT import BWT
 
 
 class mapper():
-    """main class of sternum and responsible for match reference to kmers.
+    """
+    main class of sternum and responsible for match reference to kmers.
 
     Attributes
     ----------
@@ -27,7 +28,8 @@ class mapper():
     """
 
     def __init__(self, reference, seqKmer, spine, batchSize=-1):
-        """adds the reference to the spine then mapa the sequence\
+        """
+        adds the reference to the spine then mapa the sequence\
         based on batchSize.
 
         Parameters
@@ -78,7 +80,8 @@ class mapper():
                 self.spine.add_suffix(kmer[0], temp, True)
 
     def map_sequence(self, batchSize=-1):
-        """maps the sequence based on the batchSize.
+        """
+        maps the sequence based on the batchSize.
 
         Parameters
         ----------
@@ -101,7 +104,8 @@ class mapper():
             self.map_sequence(self.batchSize)
 
     def match(self, readID, kPos, refMatched):
-        """append match instance to matching dictionary.
+        """
+        append match instance to matching dictionary.
 
         Parameters
         ----------
@@ -122,7 +126,8 @@ class mapper():
             matchInst[refInst[0]].append(matched)
 
     def filter_matching(self, minKmer=10, minQuotient=70):
-        """remove matching instances not meeting criteria.
+        """
+        remove matching instances not meeting criteria.
 
         Parameters
         ----------
@@ -164,7 +169,8 @@ class mapper():
 
 
 def concatenate(matchInst, start):
-    """combine match instances if they are in sync.
+    """
+    combine match instances if they are in sync.
 
     Parameters
     ----------

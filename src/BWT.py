@@ -3,7 +3,10 @@ from sufxArr import make_index, find_index
 
 
 class BWT():
-    """takes reference = decoder().
+
+    """
+
+    takes reference = decoder().
 
     Parameters
     ----------
@@ -14,6 +17,7 @@ class BWT():
 
     def __init__(self, reference):
         """
+
         bwt : dict
             {pos: letter, pos: letter, ..., pos: letter}
         """
@@ -25,7 +29,8 @@ class BWT():
         self.last2first = []
 
     def add_suffix(self, suffix, pos, seq="", order=False):
-        """Takes suffix and append it's position to bwt and generate bwt\
+        """
+        Takes suffix and append it's position to bwt and generate bwt\
          if order = True.
 
         Parameters
@@ -57,7 +62,8 @@ class BWT():
                 self.last2first[lastIndex] = firstIndex
 
     def find_suffix(self, suffix):
-        """search in BWT through back and fourth search.
+        """
+        search in BWT through back and fourth search.
 
         Parameters
         ----------

@@ -2,7 +2,8 @@ import os
 
 
 class decoder(object):
-    """store reads.
+    """
+    store reads.
 
     Parameters
     ----------
@@ -24,7 +25,8 @@ class decoder(object):
     """
 
     def __init__(self, fileName):
-        """automatically detect file type and extract reads.
+        """
+        automatically detect file type and extract reads.
 
         Parameters
         ----------
@@ -40,7 +42,8 @@ class decoder(object):
             self.fastq(fileName)
 
     def fasta(self, fileName):
-        """Takes the fasta file path "XXXXX.fasta"and  extract\
+        """
+        Takes the fasta file path "XXXXX.fasta"and  extract\
         the sequence and store it in "seq".
 
         Parameters

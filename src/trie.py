@@ -1,5 +1,8 @@
 class Trie():
-    """build suffix tree (trie) using dictionary.
+    def __init__(self):
+        """
+
+    build suffix tree (trie) using dictionary.
 
     Attributes
     ----------
@@ -7,12 +10,11 @@ class Trie():
 {0: {A: {OTHER RECURSIVE DICTIONARIES} C: {A: {$: [[ID, pos], [ID, pos]]}}}}
 
     """
-
-    def __init__(self):
         self.trie = {0: dict()}
 
     def add_suffix(self, suffix, readID, pos):
-        """adds suffix and its pos in readID to "trie". each letter in the \
+        """
+        adds suffix and its pos in readID to "trie". each letter in the \
         suffix represents a new dictionary, a new node.
 
         Parameters
@@ -37,7 +39,8 @@ class Trie():
         current_dict['$'].append([readID, pos])
 
     def find_suffix(self, suffix):
-        """searches for each letter of suffix in its level dictionary.
+        """
+        searches for each letter of suffix in its level dictionary.
 
         Parameters
         ----------

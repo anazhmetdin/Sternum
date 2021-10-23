@@ -1,5 +1,8 @@
 class SA():
-    """takes reference = decoder().
+
+    """
+
+    takes reference = decoder().
 
     Parameters
     ----------
@@ -9,7 +12,9 @@ class SA():
     """
 
     def __init__(self, reference):
-        """sa : list:
+        """
+
+        sa : list:
         [indecies of ordered kmers alphabtically]
         """
         self.sa = []
@@ -18,7 +23,8 @@ class SA():
         self.toBeSorted = dict()
 
     def add_suffix(self, suffix, pos, order=False):
-        """Takes suffix and append it's position suffix array and sort SA\
+        """
+        Takes suffix and append it's position suffix array and sort SA\
          alphabtically if order = True.
 
         Parameters
@@ -38,7 +44,8 @@ class SA():
             self.toBeSorted.clear()
 
     def comp_alph(self, m, suffix):
-        """compares two strings alphabtically.
+        """
+        compares two strings alphabtically.
 
         Parameters
         ----------
@@ -71,7 +78,8 @@ class SA():
         return read[0], pos, 0
 
     def find_suffix(self, suffix):
-        """do a binary search using indecies stored in sa to find suffix in\
+        """
+        do a binary search using indecies stored in sa to find suffix in\
          the reference.
 
         Parameters
@@ -118,7 +126,8 @@ class SA():
 
 
 def make_index(reference):
-    """store summary info from decoder object.
+    """
+    store summary info from decoder object.
 
     Parameters
     ----------
@@ -140,7 +149,8 @@ def make_index(reference):
 
 
 def find_index(index, pos):
-    """find the read from refrence whihc pos belongs to.
+    """
+    find the read from refrence whihc pos belongs to.
 
     Parameters
     ----------

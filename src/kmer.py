@@ -3,7 +3,8 @@ import glob
 
 
 class kmer_maker(object):
-    """process reads to get kmers and store them in "kmers".
+    """
+    process reads to get kmers and store them in "kmers".
 
     Attributes
     ----------
@@ -75,7 +76,8 @@ class kmer_maker(object):
                 self.kmers[readID].append([seq[readID][i:i+self.k], i])
 
     def dump(self, filePrefix=""):
-        """store the processed kmers on hard disk and free the memory.
+        """
+        store the processed kmers on hard disk and free the memory.
 
         Parameters
         ----------
@@ -96,7 +98,8 @@ class kmer_maker(object):
         self.kmers.clear()
 
     def load(self, filePrefix="", batchSize=-1):
-        """load kmers stored on hard disk to the memory.
+        """
+        load kmers stored on hard disk to the memory.
 
         Parameters
         ----------
@@ -131,7 +134,8 @@ class kmer_maker(object):
             return flag  # would be usefule to be used in external conditions
 
     def clear(self, admin=True, filePrefix=""):
-        """remove kmers stored on hard disk and clear "kmers" from memory.
+        """
+        remove kmers stored on hard disk and clear "kmers" from memory.
 
         Parameters
         ----------

@@ -1,5 +1,7 @@
 class reporter():
-    """generate pseudo SAM files.
+    """
+
+    generate pseudo SAM files.
 
     Parameters
     ----------
@@ -11,7 +13,8 @@ class reporter():
     """
 
     def __init__(self, sternum, filePrefix=""):
-        """output a pseudo SAM file with limited fields\
+        """
+        output a pseudo SAM file with limited fields\
         per match: read name, position, and read sequence.
 
         Parameters
@@ -28,7 +31,8 @@ class reporter():
         self.report(filePrefix)
 
     def report(self, filePrefix=""):
-        """ output file to filePrefix following this pattern per line:
+        """
+        output file to filePrefix following this pattern per line:
         read_name    None    position    None    None    None    read sequence
 
         Parameters
