@@ -79,7 +79,7 @@ To find a pattern in `bwt` , back and forth walk through the inverted pattern in
 
 ### Installing the package
 
-- Download the latest release: [releases](https://github.com/anegm98/Sternum/releases)
+- Download the latest release: [releases](https://github.com/anazhmetdin/Sternum/releases)
 - In your command line environment:
 
       pip install path/to/sternum-x.x.x-py2.py3-none-any.whl
@@ -92,4 +92,4 @@ To find a pattern in `bwt` , back and forth walk through the inverted pattern in
 
 - this file will be genrated:
   path/to/myfirstmap*\$m*\$sequenceID.sam
-- you can try with files in [sternum/data](https://github.com/anegm98/Sternum/tree/master/data)
+- you can try with files in [sternum/data](https://github.com/anazhmetdin/Sternum/tree/master/data)
