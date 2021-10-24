@@ -93,3 +93,14 @@ To find a pattern in `bwt` , back and forth walk through the inverted pattern in
 - this file will be genrated:
   path/to/myfirstmap*\$m*\$sequenceID.sam
 - you can try with files in [sternum/data](https://github.com/anazhmetdin/Sternum/tree/master/data)
+
+## Comparison with Bowtie2 and BWA
+
+- CPU seconds to map different number of reads with defaul parameters of each tool
+  ![](./figures/cpuseconds.png)
+
+- Memory used to map different number of reads with defaul parameters of each tool
+  ![](./figures/memory.png)
+
+- Percentage of mapped reads by Sternum(BWT) compared to other tools
+  ![](./figures/relativecount.png)
